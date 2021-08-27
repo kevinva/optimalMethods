@@ -131,11 +131,11 @@ def cuttingLineMethod(targetFuncDiff, x0_1, x0_2, eps=EPSILON_DEFAULT):
         fVal2, fDiff2 = targetFuncDiff(x2, 1)
         
         xNext = float(fDiff2 * x1 - fDiff1 * x2) / (fDiff2 - fDiff1)
-        print('x = {}'.format(xNext))
+        print('xk = {}'.format(xNext))
 
-        finalDiffFirst = targetFuncDiff(xNext, 1)[1]
-        finalDiffSecond = targetFuncDiff(xNext, 2)[1]
-        print('first order derivative: {}, second order derivative: {}'.format(finalDiffFirst, finalDiffSecond))
+        finalVal, finalDiffFirst = targetFuncDiff(xNext, 1)
+        finalVal, finalDiffSecond = targetFuncDiff(xNext, 2)
+        print('f(xk) = {}, first order derivative: {}, second order derivative: {}'.format(finalVal, finalDiffFirst, finalDiffSecond))
 
         if abs(finalDiffFirst) < eps:
             break
@@ -143,3 +143,26 @@ def cuttingLineMethod(targetFuncDiff, x0_1, x0_2, eps=EPSILON_DEFAULT):
             x1 = x2
             x2 = xNext
     return x2
+
+
+def findMiniPointBoundaryForFunction(targetFunc):
+    '''
+    划界法寻找极小点所在区间
+    '''
+
+    x1 = 0
+    x2 = x1 + EPSILON_DEFAULT
+    x3 = x2 + 2 * EPSILON_DEFAULT
+    n = 1
+    while True:
+        f1 = targetFunc(x1)
+        f2 = targetFunc(x2)
+        f3 = targetFunc(x3)
+        if (f1 > f2) and (f3 > f2):
+            break
+        elif (f1 > f2) and (f2 > f3):
+            x3 += abs(x3 - x2) * (n + 1)
+        n += 1
+
+    print('result range: [{}, {}]'.format(x1, x3))
+    return (x1, x3)

@@ -17,7 +17,8 @@ def targetFuncDiff(xVal, diffCount):
 # goldenCutMethod(0, 2, 0.3, targetFunc)
 # fibonacciMethod(0, 2, 0.3, targetFunc, 0.05)
 # newtonMethod(targetFuncDiff, 1e-6, 0.5)
-cuttingLineMethod(targetFuncDiff, 13, 12, 1e-5)
+# cuttingLineMethod(targetFuncDiff, 13, 12, 1e-5)
+findMiniPointBoundaryForFunction(targetFunc)
 
 
 ##################################  sympy demo ###############################

@@ -6,7 +6,7 @@ GOLDEN_CUT_POINT = 0.382
 EPSILON_DEFAULT = 0.01
 
 
-def goldenCutWithRange(low: float, high: float, targetRangeLen: float, targetFunc):
+def goldenCutMethod(low: float, high: float, targetRangeLen: float, targetFunc):
     '''
     黄金分割法
 
@@ -45,7 +45,7 @@ def goldenCutWithRange(low: float, high: float, targetRangeLen: float, targetFun
             
 
 
-def fibonacciWithRange(low: float, high: float, targetRangeLen: float, targetFunc, eps=EPSILON_DEFAULT):
+def fibonacciMethod(low: float, high: float, targetRangeLen: float, targetFunc, eps=EPSILON_DEFAULT):
     '''
     斐波那契法
     '''
@@ -71,7 +71,7 @@ def fibonacciWithRange(low: float, high: float, targetRangeLen: float, targetFun
         p = 1 - fibonacciList[n - i - 2] / fibonacciList[n - i - 1]
         if i == n - 2: # 如果是最后一次迭代
             p -= eps
-            
+
         if rangeTag == 'a':
             bTemp = a + (1 - p) * currentLen
         elif rangeTag == 'b':
@@ -96,4 +96,50 @@ def fibonacciWithRange(low: float, high: float, targetRangeLen: float, targetFun
     print('final range [{:.3f}, {:.3f}] is less than or equal to target range len: {} ? {}'.format(a, b, targetRangeLen, abs(a - b) <= targetRangeLen))
     return (a, b, aVal, bVal)
             
-    # print(fibonacciList)
+def newtonMethod(targetFunDiff, eps=EPSILON_DEFAULT, x0=0.5):
+    '''
+    牛顿迭代法
+    '''
+
+    x = x0
+    while True:
+        fVal, fDiff1 = targetFunDiff(x, 1)
+        fVal, fDiff2 = targetFunDiff(x, 2)
+        xNext = x - float(fDiff1) / float(fDiff2)
+        # print('x next: {}, fDiff1: {}, fDiff2: {}'.format(xNext, fDiff1, fDiff2))
+        if abs(xNext - x) < eps:
+            finalDiff1 = targetFunDiff(xNext, 1)[1]
+            finalDiff2 = targetFunDiff(xNext, 2)[1]
+            # 检查是否满足极小点的一阶必要条件
+            print('first order derivative: {}, second order derivative: {}'.format(finalDiff1, finalDiff2))
+            break
+        else:
+            x = xNext
+        print('f(x) = {:.3f}, x = {:.3f}'.format(fVal, x))
+    return x
+
+
+def cuttingLineMethod(targetFuncDiff, x0_1, x0_2, eps=EPSILON_DEFAULT):
+    '''
+    割线法
+    '''
+
+    x1 = x0_1
+    x2 = x0_2
+    while True:
+        fVal1, fDiff1 = targetFuncDiff(x1, 1)
+        fVal2, fDiff2 = targetFuncDiff(x2, 1)
+        
+        xNext = float(fDiff2 * x1 - fDiff1 * x2) / (fDiff2 - fDiff1)
+        print('x = {}'.format(xNext))
+
+        finalDiffFirst = targetFuncDiff(xNext, 1)[1]
+        finalDiffSecond = targetFuncDiff(xNext, 2)[1]
+        print('first order derivative: {}, second order derivative: {}'.format(finalDiffFirst, finalDiffSecond))
+
+        if abs(finalDiffFirst) < eps:
+            break
+        else:
+            x1 = x2
+            x2 = xNext
+    return x2

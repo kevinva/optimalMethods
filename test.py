@@ -1,10 +1,16 @@
 import math
 from oneDimensionFunctions import *
+from gradientMethods import *
 from sympy import *
+import torch
 
 def targetFunc(x):
     # 目标函数
     return pow(x, 4) - 14 * pow(x, 3) + 60 * pow(x, 2) - 70 * x
+
+def targetFuncv2(x: torch.Tensor):
+    Q = torch.tensor([[1, 0], [0, 1]], dtype=torch.float)
+    return x.T.matmul(Q).matmul(x)
 
 def targetFuncDiff(xVal, diffCount):
     # 求函数的导数
@@ -18,7 +24,7 @@ def targetFuncDiff(xVal, diffCount):
 # fibonacciMethod(0, 2, 0.3, targetFunc, 0.05)
 # newtonMethod(targetFuncDiff, 1e-6, 0.5)
 # cuttingLineMethod(targetFuncDiff, 13, 12, 1e-5)
-findMiniPointBoundaryForFunction(targetFunc)
+# findMiniPointBoundaryForFunction(targetFunc)
 
 
 ##################################  sympy demo ###############################
@@ -36,3 +42,15 @@ findMiniPointBoundaryForFunction(targetFunc)
 # expr_diff = diff(expr, x, 2)
 # print(expr_diff.subs([(x, 2)]))
 
+# x = torch.tensor([[4], [2]], dtype=torch.float)
+# a = torch.tensor([1.23], requires_grad=True)
+# x_new = a * x
+# f = targetFuncv2(x_new)
+# f.backward()
+# print(a.grad)
+# print(x.grad)
+# x = torch.randn(3, requires_grad=True)
+# x1 = torch.tensor(x)
+# print(x)
+x = torch.tensor([[4], [2]], requires_grad=True, dtype=torch.float)
+fastestGradient(targetFuncv2, x)
